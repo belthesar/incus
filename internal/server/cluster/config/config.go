@@ -337,6 +337,39 @@ var ConfigSchema = config.Schema{
 	//  shortdesc: Agree to ACME terms of service
 	"acme.agree_tos": {Type: config.Bool, Default: "false"},
 
+	// gendoc:generate(entity=server, group=acme, key=acme.challenge_type)
+	//
+	// ---
+	//  type: string
+	//  scope: global
+	//  defaultdesc: `http-01`
+	//  shortdesc: ACME challenge type. Possible values are `http-01` and `dns-01`.
+	"acme.challenge_type": {Default: "http-01"},
+
+	// gendoc:generate(entity=server, group=acme, key=acme.dns01.delay_before_check)
+	//
+	// ---
+	//  type: string
+	//  scope: global
+	//  shortdesc: Delay before checking DNS propagation, in time.Duration format. Default is 0 seconds.
+	"acme.dns01.delay_before_check": {},
+
+	// gendoc:generate(entity=server, group=acme, key=acme.dns01.provider)
+	//
+	// ---
+	//  type: string
+	//  scope: global
+	//  shortdesc: DNS provider for the ACME DNS-01 challenge. A list of supported provider names can be found in the `go-acme/lego` documentation (https://go-acme.github.io/lego/dns/).
+	"acme.dns01.provider": {},
+
+	// gendoc:generate(entity=server, group=acme, key=acme.dns01.resolvers)
+	//
+	// ---
+	//  type: string
+	//  scope: global
+	//  shortdesc: Comma-separated list of DNS resolvers to use for the ACME DNS-01 challenge. The resolvers must be resolvable by the server.
+	"acme.dns01.resolvers": {},
+
 	// gendoc:generate(entity=server, group=miscellaneous, key=backups.compression_algorithm)
 	// Possible values are `bzip2`, `gzip`, `lzma`, `xz`, or `none`.
 	// ---
