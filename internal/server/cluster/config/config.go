@@ -204,8 +204,22 @@ func (c *Config) LokiServer() (string, string, string, string, string, string, [
 }
 
 // ACME returns all ACME settings needed for certificate renewal.
-func (c *Config) ACME() (string, string, string, bool) {
-	return c.m.GetString("acme.domain"), c.m.GetString("acme.email"), c.m.GetString("acme.ca_url"), c.m.GetBool("acme.agree_tos")
+func (c *Config) ACME() (string, string, string, string, string, float64, []string, bool) {
+	var dns_resolvers []string
+	var dns_delay float64
+
+	if c.m.GetString("acme.dns01.resolvers") != "" {
+		dns_resolvers = strings.Split(c.m.GetString("acme.dns01.resolvers"), ",")
+	}
+
+	if c.m.GetString("acme.dns01.delay_before_check") != "" {
+
+		dns_delay = time.Duration(c.m.GetInt64("acme.dns01.delay_before_check")).Seconds()
+	} else {
+		dns_delay = 0.0
+	}
+
+	return c.m.GetString("acme.domain"), c.m.GetString("acme.email"), c.m.GetString("acme.ca_url"), c.m.GetString("acme.challenge_type"), c.m.GetString("acme.dns01.provider"), dns_delay, dns_resolvers, c.m.GetBool("acme.agree_tos")
 }
 
 // ClusterJoinTokenExpiry returns the cluster join token expiry.
