@@ -69,3 +69,67 @@ func (p *http01Provider) Token() string {
 
 	return p.token
 }
+
+// DNS01Provider is an extension of the challenge.Provider interface.
+type DNS01Provider interface {
+	challenge.Provider
+
+	Domain() string
+	KeyAuth() string
+	Token() string
+}
+
+type dns01Provider struct {
+	mu      sync.Mutex
+	domain  string
+	token   string
+	keyAuth string
+}
+
+// NewDNS01Provider returns a DNS01Provider.
+func NewDNS01Provider() DNS01Provider {
+	return &dns01Provider{}
+}
+
+func (p *dns01Provider) Present(domain string, token string, keyAuth string) error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	p.domain = domain
+	p.token = token
+	p.keyAuth = keyAuth
+
+	return nil
+}
+
+func (p *dns01Provider) CleanUp(domain string, token string, keyAuth string) error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	p.domain = ""
+	p.token = ""
+	p.keyAuth = ""
+
+	return nil
+}
+
+func (p *dns01Provider) KeyAuth() string {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return p.keyAuth
+}
+
+func (p *dns01Provider) Domain() string {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return p.domain
+}
+
+func (p *dns01Provider) Token() string {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return p.token
+}
